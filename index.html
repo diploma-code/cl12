@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4f46e5">
+<title>SIET Faculty Leave Portal | CC:403</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+:root{font-family:Inter,system-ui,sans-serif}body{background:#f5f7ff}
+.gradient{background:linear-gradient(135deg,#4338ca 0%,#7c3aed 55%,#db2777 100%)}
+.glass{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25)}
+.nav-active{background:#eef2ff;color:#4338ca;font-weight:700}
+.field{width:100%;border:1px solid #dbe1ef;border-radius:12px;padding:11px 13px;background:#fff;font-size:14px;outline:none}
+.field:focus{border-color:#818cf8;box-shadow:0 0 0 3px #c7d2fe66}
+label{display:block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#64748b;margin-bottom:6px}
+.panel{background:#fff;border:1px solid #e7eaf3;border-radius:20px;box-shadow:0 5px 20px #202a5510}
+.btn{border-radius:12px;padding:10px 15px;font-size:13px;font-weight:700;transition:.15s}
+.btn-primary{background:#4f46e5;color:#fff}.btn-primary:hover{background:#4338ca}
+.btn-soft{background:#eef2ff;color:#4338ca}.btn-danger{background:#fff1f2;color:#be123c}.btn-success{background:#059669;color:white}
+.view{display:none}.view.active{display:block}
+.status{display:inline-flex;border-radius:999px;padding:4px 9px;font-size:11px;font-weight:800}
+.status-Pending{background:#fef3c7;color:#92400e}.status-Approved{background:#d1fae5;color:#065f46}.status-Rejected{background:#ffe4e6;color:#9f1239}
+.mobile-bottom{padding-bottom:env(safe-area-inset-bottom)}
+@media print{body *{visibility:hidden!important}#printArea,#printArea *{visibility:visible!important}#printArea{position:absolute;left:0;top:0;width:100%;padding:20px}.no-print{display:none!important}}
+</style>
+</head>
+<body class="min-h-screen text-slate-800">
+<div class="min-h-screen md:flex">
+  <aside class="hidden md:flex w-72 flex-col text-white gradient p-5">
+    <div class="flex items-center gap-3 mb-9">
+      <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-2xl"><i class="fa-solid fa-graduation-cap"></i></div>
+      <div><div class="font-extrabold leading-tight">SIET Polytechnic</div><div class="text-xs text-white/75 mt-1">Faculty Leave Portal · CC:403</div></div>
+    </div>
+    <div class="text-[10px] font-extrabold tracking-[.18em] text-white/60 mb-3">WORKSPACE</div>
+    <button class="side-link rounded-xl p-3 text-left mb-2 bg-white/20" data-view="apply"><i class="fa-regular fa-calendar-plus w-6"></i> Apply for Leave</button>
+    <button class="side-link rounded-xl p-3 text-left mb-2 hover:bg-white/10" data-view="history"><i class="fa-solid fa-clock-rotate-left w-6"></i> Leave History</button>
+    <div id="hodLinks" class="hidden mt-5">
+      <div class="text-[10px] font-extrabold tracking-[.18em] text-white/60 mb-3">HOD MANAGEMENT</div>
+      <button class="side-link rounded-xl p-3 text-left mb-2 hover:bg-white/10 w-full" data-view="approvals"><i class="fa-solid fa-list-check w-6"></i> Pending Approvals <span id="pendingCountSide" class="float-right rounded-full bg-amber-300 text-amber-950 px-2">0</span></button>
+      <button class="side-link rounded-xl p-3 text-left mb-2 hover:bg-white/10 w-full" data-view="records"><i class="fa-solid fa-users w-6"></i> All Records</button>
+      <button id="logoutSide" class="rounded-xl p-3 text-left mt-2 text-rose-100 hover:bg-white/10 w-full"><i class="fa-solid fa-right-from-bracket w-6"></i> HOD Logout</button>
+    </div>
+    <div class="mt-auto glass rounded-2xl p-4"><div class="text-xs text-white/70">INSTITUTION</div><div class="font-bold mt-1">Srinivasa Institute of Engineering and Technology</div><div class="text-xs text-white/70 mt-2">Polytechnic · CC:403</div></div>
+  </aside>
+
+  <main class="flex-1 min-w-0">
+    <header class="gradient text-white px-4 sm:px-7 pt-5 pb-7 md:pt-6 md:pb-8">
+      <div class="max-w-6xl mx-auto flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3 md:hidden"><div class="w-11 h-11 rounded-2xl glass flex items-center justify-center text-xl"><i class="fa-solid fa-graduation-cap"></i></div><div><div class="font-extrabold text-sm">SIET Polytechnic</div><div class="text-[11px] text-white/75">Faculty Leave Portal · CC:403</div></div></div>
+        <div class="hidden md:block"><div class="text-sm text-white/70">SRINIVASA INSTITUTE OF ENGINEERING AND TECHNOLOGY</div><div class="text-2xl font-extrabold mt-1">Faculty Leave Management</div></div>
+        <button id="hodLoginBtn" class="glass rounded-xl px-3 py-2 text-xs font-bold whitespace-nowrap"><i class="fa-solid fa-shield-halved mr-1"></i><span id="roleLabel">HOD Login</span></button>
+      </div>
+      <div class="max-w-6xl mx-auto mt-6 md:hidden"><div class="text-xs text-white/75">FACULTY WORKSPACE</div><h1 id="mobileTitle" class="text-2xl font-extrabold mt-1">Apply for Leave</h1><p class="text-sm text-white/80 mt-1">Apply, track and manage leave requests in one place.</p></div>
+      <div class="max-w-6xl mx-auto hidden md:flex gap-3 mt-6">
+        <div class="glass rounded-2xl p-4 min-w-40"><div class="text-xs text-white/75">Total Requests</div><div id="statTotal" class="text-2xl font-extrabold mt-1">0</div></div>
+        <div class="glass rounded-2xl p-4 min-w-40"><div class="text-xs text-white/75">Pending</div><div id="statPending" class="text-2xl font-extrabold mt-1">0</div></div>
+        <div class="glass rounded-2xl p-4 min-w-40"><div class="text-xs text-white/75">Approved</div><div id="statApproved" class="text-2xl font-extrabold mt-1">0</div></div>
+      </div>
+    </header>
+
+    <div class="max-w-6xl mx-auto px-4 sm:px-7 py-5 md:py-7 pb-28 md:pb-8">
+      <div class="md:hidden grid grid-cols-3 gap-2 mb-5">
+        <div class="panel p-3"><div class="text-[10px] text-slate-500 font-bold">TOTAL</div><div id="mTotal" class="text-xl font-extrabold mt-1">0</div></div>
+        <div class="panel p-3"><div class="text-[10px] text-slate-500 font-bold">PENDING</div><div id="mPending" class="text-xl font-extrabold text-amber-600 mt-1">0</div></div>
+        <div class="panel p-3"><div class="text-[10px] text-slate-500 font-bold">APPROVED</div><div id="mApproved" class="text-xl font-extrabold text-emerald-600 mt-1">0</div></div>
+      </div>
+
+      <section id="view-apply" class="view active">
+        <div class="mb-5"><div class="text-xs font-extrabold tracking-widest text-indigo-600">NEW APPLICATION</div><h2 class="text-2xl font-extrabold mt-1">Apply for Leave</h2><p class="text-sm text-slate-500 mt-1">Complete the form and submit it for HOD review.</p></div>
+        <form id="leaveForm" class="panel p-4 sm:p-6 space-y-5">
+          <div class="flex items-center gap-3 border-b border-slate-100 pb-4"><div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center"><i class="fa-solid fa-user-pen"></i></div><div><h3 class="font-extrabold">Faculty Details</h3><p class="text-xs text-slate-500">Your identification and department</p></div></div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div><label for="faculty">Faculty Name *</label><input id="faculty" class="field" placeholder="Enter full name" required></div>
+            <div><label for="designation">Designation *</label><select id="designation" class="field" required><option>Senior Lecturer</option><option>Head of Department (HOD)</option><option>Professor</option><option>Associate Professor</option><option>Lecturer</option><option>Workshop Instructor</option></select></div>
+            <div><label for="department">Department / Branch *</label><select id="department" class="field" required><option>Diploma in Computer Engineering</option><option>Diploma in ECE</option><option>Diploma in EEE</option><option>Diploma in Mechanical Engineering</option><option>Diploma in Civil Engineering</option><option>Science & Humanities</option><option>AIML</option></select></div>
+          </div>
+          <div class="flex items-center gap-3 border-b border-slate-100 pb-4 pt-1"><div class="w-10 h-10 rounded-xl bg-fuchsia-50 text-fuchsia-600 flex items-center justify-center"><i class="fa-regular fa-calendar"></i></div><div><h3 class="font-extrabold">Leave Details</h3><p class="text-xs text-slate-500">Select leave type, dates and reason</p></div></div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div><label for="leaveType">Leave Type *</label><select id="leaveType" class="field"><option>Casual Leave (CL)</option><option>Medical Leave (ML)</option><option>Earned Leave (EL)</option><option>On Duty (OD) / Conference</option></select></div>
+            <div><label for="session">Session / Timing *</label><select id="session" class="field"><option>Full Day(s)</option><option>First Half (FN)</option><option>Second Half (AN)</option></select></div>
+            <div><label for="days">Total Days</label><input id="days" class="field bg-slate-50 font-extrabold" value="1" readonly></div>
+            <div><label for="fromDate">From Date *</label><input id="fromDate" type="date" class="field" required></div>
+            <div><label for="toDate">To Date *</label><input id="toDate" type="date" class="field" required></div>
+            <div class="sm:col-span-2 lg:col-span-1"><label for="reason">Reason for Leave *</label><textarea id="reason" rows="2" class="field" placeholder="Write the reason for your leave" required></textarea></div>
+          </div>
+          <div class="rounded-2xl bg-indigo-50/70 border border-indigo-100 p-4">
+            <div class="flex items-start justify-between gap-3 mb-3"><div><h3 class="font-extrabold text-sm"><i class="fa-solid fa-people-arrows text-indigo-600 mr-2"></i>Class / Duty Adjustment</h3><p class="text-xs text-slate-500 mt-1">Add cover arrangements for classes during your absence.</p></div><button type="button" id="addAdjustment" class="btn btn-soft whitespace-nowrap"><i class="fa-solid fa-plus mr-1"></i>Add class</button></div>
+            <div id="adjustments" class="space-y-3"></div>
+          </div>
+          <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 border-t border-slate-100 pt-4"><button type="reset" class="btn border border-slate-200 text-slate-600">Reset Form</button><button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane mr-2"></i>Submit Application</button></div>
+        </form>
+      </section>
+
+      <section id="view-history" class="view">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-5"><div><div class="text-xs font-extrabold tracking-widest text-indigo-600">MY APPLICATIONS</div><h2 class="text-2xl font-extrabold mt-1">Leave History</h2><p class="text-sm text-slate-500 mt-1">Review application status and view approved orders.</p></div><select id="historyFilter" class="field sm:max-w-48"><option value="All">All statuses</option><option>Pending</option><option>Approved</option><option>Rejected</option></select></div>
+        <div id="historyList" class="space-y-4"></div>
+      </section>
+
+      <section id="view-approvals" class="view">
+        <div class="mb-5"><div class="text-xs font-extrabold tracking-widest text-amber-600">HOD WORKSPACE</div><h2 class="text-2xl font-extrabold mt-1">Pending Approvals</h2><p class="text-sm text-slate-500 mt-1">Review requests and approve or reject them.</p></div><div id="approvalList" class="space-y-4"></div>
+      </section>
+
+      <section id="view-records" class="view">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-5"><div><div class="text-xs font-extrabold tracking-widest text-indigo-600">HOD WORKSPACE</div><h2 class="text-2xl font-extrabold mt-1">All Faculty Records</h2><p class="text-sm text-slate-500 mt-1">Institutional leave log and export tools.</p></div><div class="flex flex-wrap gap-2"><button id="exportCsv" class="btn btn-success"><i class="fa-solid fa-file-csv mr-1"></i>Export CSV</button><button id="printRecords" class="btn border border-slate-200"><i class="fa-solid fa-print mr-1"></i>Print</button></div></div>
+        <div class="panel overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead class="bg-slate-50 text-slate-500 text-xs uppercase"><tr><th class="p-3">Faculty</th><th class="p-3">Department</th><th class="p-3">Leave / Dates</th><th class="p-3">Status</th><th class="p-3">Actions</th></tr></thead><tbody id="recordsBody" class="divide-y divide-slate-100"></tbody></table></div></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<nav class="mobile-bottom no-print md:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur border-t border-slate-200 z-30">
+  <div class="grid grid-cols-3 gap-1 px-2 pt-2 pb-1" id="mobileNav">
+    <button data-view="apply" class="mobile-link rounded-xl py-2 text-indigo-600"><i class="fa-regular fa-calendar-plus block text-lg mb-1"></i><span class="text-[10px] font-bold">Apply</span></button>
+    <button data-view="history" class="mobile-link rounded-xl py-2 text-slate-500"><i class="fa-solid fa-clock-rotate-left block text-lg mb-1"></i><span class="text-[10px] font-bold">History</span></button>
+    <button id="mobileHod" class="rounded-xl py-2 text-slate-500"><i class="fa-solid fa-user-shield block text-lg mb-1"></i><span class="text-[10px] font-bold">HOD Portal</span></button>
+  </div>
+</nav>
+
+<div id="loginModal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm p-4 flex items-center justify-center">
+  <form id="loginForm" class="panel p-6 w-full max-w-sm space-y-4">
+    <div class="w-12 h-12 rounded-2xl gradient text-white flex items-center justify-center text-xl"><i class="fa-solid fa-shield-halved"></i></div>
+    <div><h2 class="text-xl font-extrabold">Common HOD Login</h2><p class="text-xs text-slate-500 mt-1">Sign in to manage institutional leave records.</p></div>
+    <div><label for="hodPassword">Password</label><input id="hodPassword" type="password" class="field" placeholder="Enter HOD password" required></div>
+    <p id="loginError" class="hidden text-sm text-rose-600">Incorrect password. Please try again.</p>
+    <p class="text-[11px] text-amber-700 bg-amber-50 rounded-xl p-3">Demo version: password is <b>Hod@403</b>. This browser-only login is not secure for real institutional use.</p>
+    <div class="flex gap-2 justify-end"><button type="button" id="cancelLogin" class="btn border border-slate-200">Cancel</button><button class="btn btn-primary">Login</button></div>
+  </form>
+</div>
+
+<div id="orderModal" class="hidden fixed inset-0 z-50 bg-slate-950/60 p-3 sm:p-6 flex items-center justify-center">
+  <div class="panel w-full max-w-2xl max-h-[92vh] overflow-auto">
+    <div class="no-print gradient text-white p-4 flex items-center justify-between rounded-t-[20px]"><div class="font-extrabold"><i class="fa-solid fa-file-circle-check mr-2"></i>Leave Sanction Order</div><button id="closeOrder" class="text-xl">&times;</button></div>
+    <div id="printArea" class="p-5 sm:p-8">
+      <div class="text-center border-b-2 border-slate-800 pb-4"><h2 class="font-extrabold text-lg">SRINIVASA INSTITUTE OF ENGINEERING AND TECHNOLOGY</h2><p class="font-semibold text-sm">Polytechnic · CC:403</p><p class="text-indigo-700 font-extrabold text-sm mt-2">OFFICIAL LEAVE SANCTION CERTIFICATE</p></div>
+      <div id="orderDetails" class="mt-5 text-sm space-y-3"></div>
+      <div class="flex justify-between items-end mt-12 text-xs"><div>Application status: <b>APPROVED</b></div><div class="text-center border-t border-slate-500 pt-2 px-4">Common Principal / HOD</div></div>
+    </div>
+    <div class="no-print p-4 border-t border-slate-100 flex justify-end gap-2"><button id="closeOrder2" class="btn border border-slate-200">Close</button><button id="printOrder" class="btn btn-primary"><i class="fa-solid fa-print mr-1"></i>Print / Save PDF</button></div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY='siet_faculty_leave_requests_v2';
+let hodAuthenticated=false, activeView='apply', currentOrderId=null;
+let requests=[];
+try{requests=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');if(!Array.isArray(requests))requests=[]}catch(e){requests=[]}
+const $=id=>document.getElementById(id);
+const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today=()=>new Date().toISOString().slice(0,10);
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(requests));renderAll()}
+function statusBadge(status){return `<span class="status status-${safe(status)}">${safe(status)}</span>`}
+function emptyBox(msg){return `<div class="panel p-10 text-center text-slate-500"><i class="fa-regular fa-folder-open text-3xl text-slate-300"></i><p class="font-bold mt-3">${safe(msg)}</p></div>`}
+function adjustmentTemplate(a={}){return `<div class="adjustment-row bg-white rounded-xl border border-indigo-100 p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
+<div><label>Branch</label><input class="field adj-branch" placeholder="e.g. CME" value="${safe(a.branch||'')}" required></div>
+<div><label>Year / Semester</label><input class="field adj-year" placeholder="e.g. 2nd Year" value="${safe(a.yearSem||'')}" required></div>
+<div><label>Subject</label><input class="field adj-course" placeholder="Subject name" value="${safe(a.course||'')}" required></div>
+<div><label>Date & Time</label><input class="field adj-time" placeholder="Date, time" value="${safe(a.time||'')}" required></div>
+<div><label>Covering Faculty</label><div class="flex gap-2"><input class="field adj-faculty min-w-0" placeholder="Faculty name" value="${safe(a.faculty||'')}" required><button type="button" class="remove-adj text-rose-500 px-2" aria-label="Remove adjustment"><i class="fa-solid fa-trash"></i></button></div></div></div>`}
+function addAdjustment(a={}){$('adjustments').insertAdjacentHTML('beforeend',adjustmentTemplate(a))}
+function calcDays(){let f=$('fromDate').value,t=$('toDate').value;if(!f||!t){$('days').value='';return}if(t<f){$('days').value='';$('toDate').setCustomValidity('To date must be on or after From date.');return}$('toDate').setCustomValidity('');let n=Math.round((new Date(t+'T00:00:00')-new Date(f+'T00:00:00'))/86400000)+1;if($('session').value!=='Full Day(s)'&&f===t)n=.5;$('days').value=n}
+function showView(v){if((v==='approvals'||v==='records')&&!hodAuthenticated){openLogin();return}activeView=v;document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id==='view-'+v));document.querySelectorAll('[data-view]').forEach(b=>{let on=b.dataset.view===v;b.classList.toggle('nav-active',on);if(b.classList.contains('mobile-link')){b.classList.toggle('text-indigo-600',on);b.classList.toggle('text-slate-500',!on)}});$('mobileTitle').textContent=({apply:'Apply for Leave',history:'Leave History',approvals:'Pending Approvals',records:'All Faculty Records'})[v]||'Faculty Leave';renderAll();window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
+function openLogin(){$('loginError').classList.add('hidden');$('hodPassword').value='';$('loginModal').classList.remove('hidden');setTimeout(()=>$('hodPassword').focus(),50)}
+function logout(){hodAuthenticated=false;$('hodLinks').classList.add('hidden');$('roleLabel').textContent='HOD Login';showView('apply')}
+$('hodLoginBtn').onclick=()=>hodAuthenticated?showView('approvals'):openLogin();$('mobileHod').onclick=()=>hodAuthenticated?showView('approvals'):openLogin();$('cancelLogin').onclick=()=>$('loginModal').classList.add('hidden');$('logoutSide').onclick=logout;
+$('loginForm').onsubmit=e=>{e.preventDefault();if($('hodPassword').value==='Hod@403'){hodAuthenticated=true;$('loginModal').classList.add('hidden');$('hodLinks').classList.remove('hidden');$('roleLabel').textContent='HOD Dashboard';showView('approvals')}else $('loginError').classList.remove('hidden')};
+$('fromDate').addEventListener('change',()=>{if($('toDate').value<$('fromDate').value)$('toDate').value=$('fromDate').value;calcDays()});$('toDate').addEventListener('change',calcDays);$('session').addEventListener('change',calcDays);
+$('addAdjustment').onclick=()=>addAdjustment();$('adjustments').addEventListener('click',e=>{const b=e.target.closest('.remove-adj');if(b){if(document.querySelectorAll('.adjustment-row').length===1){alert('At least one class adjustment is required.');return}b.closest('.adjustment-row').remove()}});
+$('leaveForm').addEventListener('reset',()=>setTimeout(()=>{ $('days').value='1';$('adjustments').innerHTML='';addAdjustment()},0));
+$('leaveForm').onsubmit=e=>{e.preventDefault();calcDays();if(!$('leaveForm').reportValidity())return;const adjustments=[...document.querySelectorAll('.adjustment-row')].map(r=>({branch:r.querySelector('.adj-branch').value.trim(),yearSem:r.querySelector('.adj-year').value.trim(),course:r.querySelector('.adj-course').value.trim(),time:r.querySelector('.adj-time').value.trim(),faculty:r.querySelector('.adj-faculty').value.trim()}));const req={id:'LEV-'+Date.now().toString().slice(-7),facultyName:$('faculty').value.trim(),designation:$('designation').value,dept:$('department').value,type:$('leaveType').value,fromDate:$('fromDate').value,toDate:$('toDate').value,days:Number($('days').value),session:$('session').value,reason:$('reason').value.trim(),adjustments,status:'Pending',appliedDate:today()};requests.unshift(req);save();$('leaveForm').reset();showView('history');alert('Leave application submitted successfully. Application ID: '+req.id)};
+$('historyFilter').onchange=renderHistory;
+function renderHistory(){const list=$('historyList'),filter=$('historyFilter').value;const arr=requests.filter(r=>filter==='All'||r.status===filter);if(!arr.length){list.innerHTML=emptyBox('No leave applications match this filter.');return}list.innerHTML=arr.map(r=>`<article class="panel p-4 sm:p-5"><div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3"><div><div class="font-extrabold">${safe(r.id)} <span class="text-xs font-medium text-slate-400 ml-1">· Applied ${safe(r.appliedDate)}</span></div><div class="mt-2">${statusBadge(r.status)}</div></div>${r.status==='Approved'?`<button class="btn btn-soft view-order" data-id="${safe(r.id)}"><i class="fa-solid fa-file-lines mr-1"></i>View Sanction Order</button>`:''}</div><div class="grid grid-cols-1 sm:grid-cols-3 gap-3 py-4 text-sm"><div><div class="text-xs text-slate-400">Leave type</div><b>${safe(r.type)}</b></div><div><div class="text-xs text-slate-400">Duration</div><b>${safe(r.fromDate)} to ${safe(r.toDate)}</b><div class="text-xs text-slate-500">${safe(r.days)} day(s) · ${safe(r.session)}</div></div><div><div class="text-xs text-slate-400">Department</div><b>${safe(r.dept)}</b></div></div><div class="rounded-xl bg-slate-50 p-3 text-sm"><div><b>Reason:</b> ${safe(r.reason)}</div><div class="mt-2"><b>Class adjustments:</b> ${r.adjustments.map(a=>`${safe(a.branch)} / ${safe(a.yearSem)} — ${safe(a.course)}, ${safe(a.time)}; cover: ${safe(a.faculty)}`).join(' · ')||'None'}</div></div></article>`).join('')}
+function renderApprovals(){const list=$('approvalList'),arr=requests.filter(r=>r.status==='Pending');$('pendingCountSide').textContent=arr.length;if(!arr.length){list.innerHTML=emptyBox('There are no pending leave applications.');return}list.innerHTML=arr.map(r=>`<article class="panel p-4 sm:p-5"><div class="flex flex-wrap justify-between gap-2 border-b border-slate-100 pb-3"><div><h3 class="font-extrabold">${safe(r.facultyName)}</h3><p class="text-xs text-slate-500 mt-1">${safe(r.designation)} · ${safe(r.dept)} · ${safe(r.id)}</p></div>${statusBadge(r.status)}</div><div class="grid sm:grid-cols-3 gap-3 py-4 text-sm"><div><span class="text-xs text-slate-400 block">Leave Type</span><b>${safe(r.type)}</b></div><div><span class="text-xs text-slate-400 block">Dates / Days</span><b>${safe(r.fromDate)} to ${safe(r.toDate)} (${safe(r.days)} days)</b></div><div><span class="text-xs text-slate-400 block">Applied On</span><b>${safe(r.appliedDate)}</b></div></div><div class="bg-slate-50 rounded-xl p-3 text-sm"><b>Reason:</b> ${safe(r.reason)}<div class="mt-2"><b>Adjustments:</b> ${r.adjustments.map(a=>`${safe(a.branch)} ${safe(a.yearSem)} — ${safe(a.course)} with ${safe(a.faculty)} (${safe(a.time)})`).join(' · ')}</div></div><div class="flex justify-end gap-2 mt-4"><button class="btn btn-danger decide" data-id="${safe(r.id)}" data-status="Rejected">Reject</button><button class="btn btn-success decide" data-id="${safe(r.id)}" data-status="Approved"><i class="fa-solid fa-check mr-1"></i>Approve Leave</button></div></article>`).join('')}
+function renderRecords(){const body=$('recordsBody');if(!requests.length){body.innerHTML='<tr><td colspan="5" class="p-8 text-center text-slate-400">No records found.</td></tr>';return}body.innerHTML=requests.map(r=>`<tr class="hover:bg-slate-50"><td class="p-3"><b>${safe(r.facultyName)}</b><div class="text-xs text-slate-400">${safe(r.designation)} · ${safe(r.id)}</div></td><td class="p-3">${safe(r.dept)}</td><td class="p-3">${safe(r.type)}<div class="text-xs text-slate-500">${safe(r.fromDate)} – ${safe(r.toDate)} (${safe(r.days)}d)</div></td><td class="p-3">${statusBadge(r.status)}</td><td class="p-3 whitespace-nowrap"><button class="text-indigo-600 font-bold text-xs view-order mr-2" data-id="${safe(r.id)}">View</button><button class="text-rose-600 font-bold text-xs delete-record" data-id="${safe(r.id)}">Delete</button></td></tr>`).join('')}
+function renderStats(){const total=requests.length,pending=requests.filter(r=>r.status==='Pending').length,approved=requests.filter(r=>r.status==='Approved').length;['statTotal','mTotal'].forEach(id=>$(id).textContent=total);['statPending','mPending'].forEach(id=>$(id).textContent=pending);['statApproved','mApproved'].forEach(id=>$(id).textContent=approved);$('pendingCountSide').textContent=pending}
+function renderAll(){renderStats();renderHistory();renderApprovals();renderRecords()}
+document.addEventListener('click',e=>{const d=e.target.closest('.decide');if(d){if(!hodAuthenticated)return openLogin();const r=requests.find(x=>x.id===d.dataset.id);if(r){r.status=d.dataset.status;save()}return}const v=e.target.closest('.view-order');if(v){openOrder(v.dataset.id);return}const del=e.target.closest('.delete-record');if(del){if(!hodAuthenticated)return openLogin();if(confirm('Permanently delete this leave record from this browser?')){requests=requests.filter(r=>r.id!==del.dataset.id);save()}return}});
+function openOrder(id){const r=requests.find(x=>x.id===id);if(!r)return;currentOrderId=id;$('orderDetails').innerHTML=`<div class="grid grid-cols-2 gap-3 bg-slate-50 p-3 rounded-xl"><div><span class="text-slate-500">Application ID</span><br><b>${safe(r.id)}</b></div><div><span class="text-slate-500">Applied Date</span><br><b>${safe(r.appliedDate)}</b></div><div><span class="text-slate-500">Faculty</span><br><b>${safe(r.facultyName)}</b></div><div><span class="text-slate-500">Department</span><br><b>${safe(r.dept)}</b></div></div><div class="grid grid-cols-2 gap-3"><div>Leave Type<br><b>${safe(r.type)}</b></div><div>Total Days<br><b>${safe(r.days)} (${safe(r.session)})</b></div><div>From Date<br><b>${safe(r.fromDate)}</b></div><div>To Date<br><b>${safe(r.toDate)}</b></div></div><div><b>Reason</b><p class="mt-1">${safe(r.reason)}</p></div><div><b>Class / Duty Adjustments</b><ul class="list-disc ml-5 mt-1">${r.adjustments.map(a=>`<li>[${safe(a.branch)} · ${safe(a.yearSem)}] ${safe(a.course)} — ${safe(a.time)}, covering faculty: ${safe(a.faculty)}</li>`).join('')||'<li>None recorded</li>'}</ul></div>`;$('orderModal').classList.remove('hidden')}
+function closeOrder(){$('orderModal').classList.add('hidden')}$('closeOrder').onclick=closeOrder;$('closeOrder2').onclick=closeOrder;$('printOrder').onclick=()=>window.print();$('printRecords').onclick=()=>window.print();
+$('exportCsv').onclick=()=>{if(!hodAuthenticated)return openLogin();const cols=['Application ID','Faculty Name','Designation','Department','Leave Type','From Date','To Date','Days','Session','Status','Applied Date','Reason','Class Adjustments'];const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';const lines=[cols.map(q).join(','),...requests.map(r=>[r.id,r.facultyName,r.designation,r.dept,r.type,r.fromDate,r.toDate,r.days,r.session,r.status,r.appliedDate,r.reason,r.adjustments.map(a=>`${a.branch} ${a.yearSem}: ${a.course} / ${a.time} / ${a.faculty}`).join('; ')].map(q).join(','))];const blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='SIET_CC403_Faculty_Leave_Records.csv';a.click();URL.revokeObjectURL(url)};
+addAdjustment();renderAll();
+</script>
+</body>
+</html>
